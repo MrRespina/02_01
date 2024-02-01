@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+    <input placeholder="{{content}}">
+    <!-- 
+        1. 변수
+        변수를 중괄호를 이중으로 사용함 {{변수}}의 형태
+
+        내부에서는 변수를 선언할 때는 { % set 변수명 = 값 %} 의 형태
+        { 와 % 는 붙여쓰면 => 주석안에서 붙여쓰면 코드 인식을 해서 에러가 발생함
+        없는 변수값을 출력하면 EL처럼 에러 발생 X
+
+    -->
+    {% set node = 'Node.js' %}
+    {% set js = 'Javascript' %}
+    <h1>{{ node }} 와 {{ js }}</h1>
+    <!--
+        중괄호 안쪽에서 계산도 가능
+    -->
+    {{ 2 ** 7 }}
+    <!--
+        이스케이프 : &lt; &gt; 등을 일컫음
+        {{ data | safe }} safe라는 필터를 사용하면
+        태그를 인식하지 못하고 문자열 그대로 받아들임
+    -->
+    <p>{{ '<b>이스케이프</b>' }}</p>
+    <p>{{ '<b>이스케이프</b>' | safe }}</p>
+
+    <!-- 스크립트에서 Nunjucks 변수 사용하기 -->
+    <!--
+    <script>
+        let node = "{{ node }}";
+        alert(node);
+    </script>
+    -->
+
+    <!--
+        반복문
+        { % % } 안에 for ~ in을 작성하고
+        반복문이 긑나는 부분에 { % endfor % }를 입력해서
+        반복문이 끝나는 위치라는 것을 알려줌.
+        반복문 내에서 index를 사용하고 싶다면
+        loop.index라는 특수한 변수를 사용할 수 있음!
+    -->
+
+    <!-- loop.index는 1번부터 시작함! -->
+    <ul>
+        {% set fruits = ['사과','배','바나나','복숭아','레몬'] %}
+        {% for fruit in fruits %}
+            <li>
+                {{ loop.index }} 번째 : {{ fruit }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!--
+        조건문
+        { % if 조건 % } { % elif 조건 % } { % else % } { % endif % }
+        로 구성되어있음.
+    -->
+    {% set isLoggedIn = true %}
+    {% if isLoggedIn %}
+        <div>로그인 되었습니다.</div>
+    {% else %}
+        <div>로그인 하세요.</div>
+    {% endif %}
+
+    <!-- { { } } 안에서 사용하는 방법 -->
+    <div>{{ '로그인 되었습니다.' if isLoggedIn else '로그인 하세요.'}}</div>
+
+    <!-- switch-case 문은 없지만 elif를 통해 여러 조건들을 분기처리 할 수 있음 -->
+
+    <!-- 
+        include
+        웹 제작시 공통되는 부분들을 따로 관리할 수 있다는 장점!
+    -->
+
+    <!--
+        extend와 block
+        레이아웃을 정할 수 있고, 공통되는 레이아웃 부분을 따로 관리 할 수 있다는 장점이 있다.
+
+        뼈대가 될 파일에 공통된 내용(태그)를 넣고,
+        페이지마다 달라지는 부분을 block이라는 것으로 비워둠
+        block은 여러개 만들어도 되며,
+        { % block [블록이름] % }으로 선언하고,
+        { % endblock % }으로 종료함.
+
+        block이 되는 파일에서는 { % extends 경로 % } 키워드로
+        뼈대 (레이아웃) 파일을 지정하고 block 부분을 넣는다
+        후에 express에서 res.render('bpdy')를 사용해
+        하나의 HTML로 합쳐 렌더링을 할 수 있는데,
+        이 때 같은 이름의 block 부분이 합쳐지게 됨
+
+        템플릿에서 { % block % }과 { % endblock % } 사이에 있는 경우,
+        { % extends % }가 실행이 되면 기존 내용은 사라짐
+        만약 기존 내용을 유지하고, 이어서 내용을 삽입하고 싶을 때는,
+        템플릿을 불러오는 쪽에 super()를 삽입해주면 됨.
+    -->
+
+</body>
+</html>
